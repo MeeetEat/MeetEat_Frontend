@@ -70,6 +70,8 @@ export default function WriteReview() {
   const handleWriteComplete = () => {
     const textareaValue = document.getElementById("textarea").value;
     apiRestReviewWrite(info.matchedId, info.restId, textareaValue);
+    alert("작성이 완료되었습니다.");
+    navigate("/");
   };
 
   async function apiRestReviewWrite(matchedId, restId, textareaValue) {

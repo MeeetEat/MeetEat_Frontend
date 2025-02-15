@@ -365,7 +365,7 @@ export default function RestList() {
                         ></img>
                       </>
                     ) : (
-                      <Logo />
+                      <Logo className="" />
                     )}
                   </div>
                   <p className="text-lg text-overflow">{rest.place_name}</p>
