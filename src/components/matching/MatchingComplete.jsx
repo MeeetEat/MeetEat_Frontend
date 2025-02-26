@@ -1,10 +1,11 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router-dom";
 import useInterval from "../hooks/useInterval";
 import axios from "axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import matchingStore from "../../store/matchingStore";
+import modalStore from "../../store/modalStore.js";
 
 export default function MatchingComplete() {
   // 현재 위치
@@ -160,12 +161,22 @@ export default function MatchingComplete() {
       eventSource.addEventListener("cancel", (e) => {
         console.log("3분전 취소");
         console.log(e.data);
-        alert("매칭 이탈자가 발생하여 매칭을 종료합니다.");
-        window.sessionStorage.clear();
-        matchingStore.setIsCompleted(false);
-        matchingStore.setIsMatched(false);
-        eventSource.close();
-        window.location.replace("/");
+        modalStore.openModal("oneBtn", {
+          message: (
+            <>
+              <p>매칭 이탈자가 발생하여 매칭을 종료합니다.</p>
+            </>
+          ),
+          onConfirm: async () => {
+            await navigate("/mypage");
+            window.sessionStorage.clear();
+            matchingStore.setIsCompleted(false);
+            matchingStore.setIsMatched(false);
+            eventSource.close();
+            window.location.replace("/");
+            modalStore.closeModal();
+          },
+        });
       });
       eventSource.addEventListener("escape", (e) => {
         console.log("3분후 취소");
