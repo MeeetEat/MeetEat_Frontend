@@ -92,7 +92,7 @@ export default function CheckPlace() {
         window.sessionStorage.removeItem("isMatching");
         window.sessionStorage.removeItem("isMatched");
         window.sessionStorage.setItem("isCompleted", "true");
-        navigate(`/matching/choice-place/${JSON.parse(e.data).matching.id}`);
+        navigate(`/matching/choice-place/${JSON.parse(e.data).matchingHistoryId}`);
         eventSource.close();
       });
 

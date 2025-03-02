@@ -100,8 +100,7 @@ export default function MainMatching() {
         },
       });
     }
-    const id = JSON.parse(window.sessionStorage.getItem("matchedData")).matching
-      .id;
+    const id = JSON.parse(window.sessionStorage.getItem("matchedData")).matchingHistoryId
     return navigate(`/matching/complete/${id}`);
   };
 

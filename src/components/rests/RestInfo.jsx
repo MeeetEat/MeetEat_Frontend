@@ -49,10 +49,20 @@ const RestInfo = observer(() => {
       }
 
       if (error.response?.status === 403) {
-        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-        localStorage.removeItem("token");
-        authStore.setLoggedIn(false);
-        window.location.replace("/");
+        modalStore.openModal("oneBtn", {
+          message: (
+            <>
+              <p>세션이 만료되었습니다. 다시 로그인해주세요!.</p>
+            </>
+          ),
+          onConfirm: async () => {
+            modalStore.closeModal();
+            localStorage.removeItem("token");
+            authStore.setLoggedIn(false);
+            window.location.replace("/");
+          },
+          backgroundClickNoClose: true
+        });
       }
     }
   };
@@ -109,7 +119,7 @@ const RestInfo = observer(() => {
             modalStore.closeModal();
           },
         });
-          return;
+        return;
       }
 
       try {
@@ -153,7 +163,7 @@ const RestInfo = observer(() => {
 
   const nicknameField = useEditableField("nickname");
   const introduceField = useEditableField("introduce");
-  console.log("매칭 카운트 확인" , profileData);
+  console.log("매칭 카운트 확인", profileData);
   const viewMedal = useMemo(() => {
     const count = profileData?.matchingCount || 0;
     if (count >= 5) return <GoldMedal/>;
@@ -266,11 +276,41 @@ const RestInfo = observer(() => {
                               authStore.setLoggedIn(false);
                               navigate("/");
                             },
+                            backgroundClickNoClose: true
                           });
                           console.log("탈퇴하기 완료");
                         }
                       } catch (error) {
-                        console.error("탈퇴하기 요청 실패!:", error);
+                        console.log(error)
+                        if (error.status === 400) {
+                          modalStore.openModal("oneBtn", {
+                            message: (
+                              <>
+                                <p>현재 진행 중인 매칭이 있어</p>
+                                <p>탈퇴할 수 없습니다.</p>
+                              </>
+                            ),
+                            onConfirm: async () => {
+                              await modalStore.closeModal();
+                            },
+                            backgroundClickNoClose: true
+                          });
+                          console.error("탈퇴하기 요청 실패!:", error);
+                        } else {
+                          modalStore.openModal("oneBtn", {
+                            message: (
+                              <>
+                                <p>서버에 오류가 발생했습니다.</p>
+                                <p>잠시 후 다시 시도해주세요.</p>
+                              </>
+                            ),
+                            onConfirm: async () => {
+                              await modalStore.closeModal();
+                            },
+                            backgroundClickNoClose: true
+                          });
+                          console.error("탈퇴하기 요청 실패!:", error);
+                        }
                       }
                     },
                     reverseOrder: true, // 두 번째 모달의 버튼 순서를 뒤집습니다.

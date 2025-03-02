@@ -7,7 +7,7 @@ const Modal = observer(() => {
   if (!modalStore.isOpen) return null;
 
   const { modalStyle, modalProps } = modalStore;
-  let { message, onConfirm } = modalProps; // onConfirm, onCancel 등
+  let { message, onConfirm, backgroundClickNoClose } = modalProps; // onConfirm, onCancel 등
 
   // 만약 message가 함수라면 호출하여 최신 JSX 요소를 생성
   if (typeof message === 'function') {
@@ -20,6 +20,12 @@ const Modal = observer(() => {
       await onConfirm();  // 확인을 선택했을 때 호출
     }
   };
+  // backgroundClickNoClose : true 시 배경을 눌러도 모달이 닫히지 않음
+  const handleBackgroundClick = () => {
+    if (!backgroundClickNoClose) {
+      modalStore.closeModal();
+    }
+  };
 
   // modalType에 따른 다른 모달 내용 처리
   const renderModalContent = () => {
@@ -29,6 +35,7 @@ const Modal = observer(() => {
           <OneBtnModal
             message={message}
             onConfirm={handleConfirm}
+            backgroundClickNoClose={backgroundClickNoClose}
           />
         );
       case 'twoBtn':
@@ -37,6 +44,7 @@ const Modal = observer(() => {
             message={message}
             onConfirm={handleConfirm}
             reverseOrder={modalProps.reverseOrder}
+            backgroundClickNoClose={backgroundClickNoClose}
           />
         );
       default:
@@ -48,7 +56,7 @@ const Modal = observer(() => {
     <>
       <div
         className="flex fixed top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/40 z-20"
-        onClick={() => modalStore.closeModal()} // 모달 닫기
+        onClick={handleBackgroundClick} // 모달 닫기
       >
       </div>
       <div

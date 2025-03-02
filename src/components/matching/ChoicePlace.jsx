@@ -96,7 +96,7 @@ export default function CheckPlace() {
       window.sessionStorage.removeItem("matchingData");
       window.sessionStorage.removeItem("tempPosition");
       const id = JSON.parse(window.sessionStorage.getItem("matchedData"))
-        .matching.id;
+        .matchingHistoryId;
       window.sessionStorage.removeItem("firstLoadDone");
       navigate(`/matching/complete/${id}`);
     }

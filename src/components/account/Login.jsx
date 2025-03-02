@@ -106,6 +106,7 @@ export default function Login() {
               await navigate("/mypage");
               modalStore.closeModal();
             },
+            backgroundClickNoClose:true
           });
         } else {
           navigate("/");
@@ -236,6 +237,7 @@ export default function Login() {
               await navigate("/mypage");
               modalStore.closeModal();
             },
+            backgroundClickNoClose:true
           });
         } else {
           navigate("/");
